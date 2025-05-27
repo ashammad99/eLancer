@@ -8,10 +8,17 @@ use App\Http\Resources\ProjectResource;
 use App\Models\Project;
 use App\Models\User;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Response;
 use Illuminate\Support\Facades\Storage;
 
 class ProjectsController extends Controller
 {
+    public function __construct()
+    {
+        $this->middleware(['auth:sanctum'])->except(['show', 'index']);
+    }
+
     /**
      * Display a listing of the resource.
      *
@@ -20,7 +27,7 @@ class ProjectsController extends Controller
     public function index()
     {
 //        return Project::query();
-        $entries = Project::query()->get(['id','title','description']);//->latest()->paginate();
+        $entries = Project::query()->get(['id', 'title', 'description']);//->latest()->paginate();
         $entries = Project::query()->latest()->paginate();
         $entries = Project::query()->latest()->with([
             'user:id,name',
@@ -34,7 +41,7 @@ class ProjectsController extends Controller
     /**
      * Store a newly created resource in storage.
      *
-     * @param  \Illuminate\Http\Request  $request
+     * @param \Illuminate\Http\Request $request
      * @return \Illuminate\Http\Response
      */
     public function store(ProjectRequest $request)
@@ -43,7 +50,7 @@ class ProjectsController extends Controller
 
         $data = $request->except('attachments');
 
-        $project = $user->projects()->create( $data );
+        $project = $user->projects()->create($data);
 
         $tags = explode(',', $request->input('tags'));
         $project->syncTags($tags);
@@ -58,7 +65,7 @@ class ProjectsController extends Controller
     /**
      * Display the specified resource.
      *
-     * @param  int  $id
+     * @param int $id
      * @return \Illuminate\Http\Response
      */
     public function show(Project $project)
@@ -75,8 +82,8 @@ class ProjectsController extends Controller
     /**
      * Update the specified resource in storage.
      *
-     * @param  \Illuminate\Http\Request  $request
-     * @param  int  $id
+     * @param \Illuminate\Http\Request $request
+     * @param int $id
      * @return \Illuminate\Http\Response
      */
     public function update(Request $request, $id)
@@ -98,18 +105,18 @@ class ProjectsController extends Controller
     /**
      * Remove the specified resource from storage.
      *
-     * @param  int  $id
+     * @param int $id
      * @return \Illuminate\Http\Response
      */
     public function destroy(Project $project)
     {
-//        $user = Auth::guard('sanctum')->user();
-//
-//        if (!$user->tokenCan('projects.delete')) {
-//            return Response::json([
-//                'message' => 'Permission denied!',
-//            ], 403);
-//        }
+        $user = Auth::guard('sanctum')->user();
+
+        if (!$user->tokenCan('projects.delete')) {
+            return Response::json([
+                'message' => 'Permission denied!',
+            ], 403);
+        }
 
         $project->delete();
 

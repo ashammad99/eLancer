@@ -4,8 +4,6 @@ use App\Http\Controllers\Client\ProjectsController;
 use Illuminate\Support\Facades\Route;
 
 
-
-
 //project.index
 //project.create
 
@@ -26,8 +24,6 @@ Route::group([
     'as' => 'client.',
     'middleware' => ['auth'],
 //    'namespace' => 'Client',
-], function() {
-
-    Route::resource('projects',App\Http\Controllers\Client\ProjectsController::class );
-
+], function () {
+    Route::resource('projects', ProjectsController::class);
 });

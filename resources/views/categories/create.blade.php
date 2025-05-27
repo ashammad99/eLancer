@@ -16,7 +16,7 @@
     <li class="breadcrumb-item active">Create Category</li>
 @endsection
 @section('content')
-    <form action="{{route('dashboard.categories.store')}}" method="post">
+    <form action="{{route('categories.store')}}" method="post">
         <!--input type="hidden" name="_token" value="<?= csrf_token()?>"-->
 {{--                @csrf  csrf_field()--}}
         @csrf

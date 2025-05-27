@@ -16,19 +16,21 @@ use Illuminate\Support\Str;
 class CategoriesController extends Controller
 {
     protected $rules = [
-        'name' => ['required','string','max:255','min:2','filter'],
+        'name' => ['required', 'string', 'max:255', 'min:2', 'filter'],
         'description' => 'nullable|string',
-        'parent_id' => ['nullable','int','exists:categories,id'], //to check if the value exist in categories table, id col
+        'parent_id' => ['nullable', 'int', 'exists:categories,id'], //to check if the value exist in categories table, id col
         'art_file' => 'nullable|file'
     ];
 
-    public function index() {
-        $categories = Category::query()->leftjoin('categories as parents','parents.id','=','categories.parent_id')
+    public function index()
+    {
+        $categories = Category::query()->leftjoin('categories as parents', 'parents.id', '=', 'categories.parent_id')
             ->select([
                 'categories.*',
                 'parents.name as parent_name'
             ])
-            ->paginate(2,);
+            ->paginate();
+//            ->dd();
 
         return View::make('categories.index')->with([
             'categories' => $categories,
@@ -36,7 +38,9 @@ class CategoriesController extends Controller
             'flashMessage' => session('success')
         ]);
     }
-    public function show($id) {
+
+    public function show($id)
+    {
         $category = Category::query()->findOrFail($id);
         return View::make('categories.show')->with([
             'category' => $category,
@@ -44,12 +48,15 @@ class CategoriesController extends Controller
         ]);
     }
 
-    public function create() {
+    public function create()
+    {
         $parents = Category::all();
         $category = new Category();//this object will returned to _form to stop error
-        return view('categories.create',compact('parents','category'));
+        return view('categories.create', compact('parents', 'category'));
     }
-    public function store(Request $request) {
+
+    public function store(Request $request)
+    {
 
         $request->validate($this->rules());
 
@@ -76,18 +83,21 @@ class CategoriesController extends Controller
         }
         $category = Category::query()->create($data);
 
-        session()->flash('success','Category Created !');
-        return redirect(route('dashboard.categories.index'));
+        session()->flash('success', 'Category Created !');
+        return redirect(route('categories.index'));
 
     }
 
-    public function edit(Category $category) {
+    public function edit(Category $category)
+    {
         //with Route Resource you dont need to pass id, just pass $category and the model will return the model
 //        $category = Category::query()->findOrFail($id);
         $parents = Category::all();
-        return view('categories.edit',compact('category','parents'));
+        return view('categories.edit', compact('category', 'parents'));
     }
-    public function update(Request $request,Category $category) {
+
+    public function update(Request $request, Category $category)
+    {
         $request->validate($this->rules);
 //        $category = Category::query()->findOrFail($id);
 //        $category->name = $request->input('name');
@@ -97,15 +107,46 @@ class CategoriesController extends Controller
 //        $category->save();
         $category->update($request->all());
 
-        session()->flash('success','Category Updated');
-        return redirect(route('dashboard.categories.index'));
+        session()->flash('success', 'Category Updated');
+        return redirect(route('categories.index'));
     }
 
-    public function destroy($id) {
+    public function destroy($id)
+    {
         Category::destroy($id);
-        session()->flash('success','Category Deleted');
-        return redirect(route('dashboard.categories.index'));
+        session()->flash('success', 'Category Deleted');
+        return redirect(route('categories.index'));
     }
+
+    public function trash()
+    {
+        $categories = Category::onlyTrashed()->paginate();
+        return view('categories.trash', [
+            'categories' => $categories,
+        ]);
+    }
+
+    public function restore(Request $request, $id)
+    {
+        $category = Category::onlyTrashed()->findOrFail($id);
+        $category->restore();
+
+        return redirect()
+            ->route('categories.trash')
+            ->with('success', 'Category restored!');
+
+    }
+
+    public function forceDelete($id)
+    {
+        $category = Category::withTrashed()->findOrFail($id);
+        $category->forceDelete();
+
+        return redirect()
+            ->route('categories.trash')
+            ->with('success', 'Category deleted for ever!');
+    }
+
     protected function rules()
     {
         //Appending new rules to existing rules
@@ -123,4 +164,5 @@ class CategoriesController extends Controller
         //$rules['name'][] ='filter';//we can add it as this line or directly to array rules as 'required' rule
         return $rules;
     }
+
 }

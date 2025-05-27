@@ -66,6 +66,7 @@ use App\Http\Controllers\ProjectsController;
 | contains the "web" middleware group. Now create something great!
 |
 */
+
 Route::get('/', function () {
     return view('/home');
 });
@@ -75,7 +76,7 @@ Route::group([
 //    Route::get('/', [HomeController::class, 'index'])->name('home');
 
     Route::get('projects/{project}', [ProjectsController::class, 'show'])
-        ->name('projects.show');
+        ->name('project.show');
 });
 
 
