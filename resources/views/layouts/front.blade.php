@@ -1,5 +1,5 @@
 <!doctype html>
-<html lang="{{-- App::currentLocale() --}}" dir="{{-- LaravelLocalization::getCurrentLocaleDirection() --}}">
+<html lang="{{App::currentLocale()}}" dir="{{-- LaravelLocalization::getCurrentLocaleDirection() --}}">
 
 <head>
 
@@ -54,7 +54,7 @@
                                 </ul>
                             </li>
 
-                            <li><a href="#">{{ trans('Find Work') }}</a>
+                            <li><a href="#">{{ __('Find Work') }}</a>
                                 <ul class="dropdown-nav">
                                     <li><a href="#">@lang('Browse Jobs')</a>
                                         <ul class="dropdown-nav">

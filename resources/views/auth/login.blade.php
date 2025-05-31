@@ -6,13 +6,13 @@
             <div class="row">
                 <div class="col-md-12">
 
-                    <h2>Log In</h2>
+                    <h2>{{__('Log In')}}</h2>
 
                     <!-- Breadcrumbs -->
                     <nav id="breadcrumbs" class="dark">
                         <ul>
-                            <li><a href="#">Home</a></li>
-                            <li>Log In</li>
+                            <li><a href="#">{{__('Home')}}</a></li>
+                            <li>{{__('Log In')}}</li>
                         </ul>
                     </nav>
 
@@ -64,7 +64,7 @@
 
                     <!-- Button -->
                     <button class="button full-width button-sliding-icon ripple-effect margin-top-10" type="submit"
-                            form="login-form">Log In <i class="icon-material-outline-arrow-right-alt"></i></button>
+                            form="login-form">{{__('Log In')}} <i class="icon-material-outline-arrow-right-alt"></i></button>
 
                     <!-- Social Login -->
                     <div class="social-login-separator"><span>or</span></div>

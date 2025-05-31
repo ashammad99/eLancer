@@ -40,6 +40,7 @@ class Project extends Model
         });
     }
 
+    //local scopes
     public function scopeFilter(Builder $builder, $filters = [])
     {
         $filters = array_merge([

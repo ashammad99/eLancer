@@ -60,7 +60,7 @@ class ProjectsController extends Controller
 
         return redirect()
             ->route('client.projects.index')
-            ->with('success', 'Project added');
+            ->with('success', __('Project added'));
 
     }
 
