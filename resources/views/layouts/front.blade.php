@@ -1,5 +1,5 @@
 <!doctype html>
-<html lang="{{App::currentLocale()}}" dir="{{-- LaravelLocalization::getCurrentLocaleDirection() --}}">
+<html lang="{{ App::currentLocale() }}" dir="{{ LaravelLocalization::getCurrentLocaleDirection() }}">
 
 <head>
 
@@ -11,12 +11,11 @@
 
     <!-- CSS
 ================================================== -->
-{{--    @if ( LaravelLocalization::getCurrentLocaleDirection() == 'rtl')--}}
-{{--        <link rel="stylesheet" href="{{ asset('assets/front/css/style.rtl.css') }}">--}}
-{{--    @else--}}
-{{--        <link rel="stylesheet" href="{{ asset('assets/front/css/style.css') }}">--}}
-{{--    @endif--}}
-    <link rel="stylesheet" href="{{ asset('assets/front/css/style.css') }}">
+    @if ( LaravelLocalization::getCurrentLocaleDirection() == 'rtl')
+        <link rel="stylesheet" href="{{ asset('assets/front/css/style.rtl.css') }}">
+    @else
+        <link rel="stylesheet" href="{{ asset('assets/front/css/style.css') }}">
+    @endif
     <link rel="stylesheet" href="{{ asset('assets/front/css/colors/blue.css') }}">
 
 </head>
@@ -46,7 +45,7 @@
                     <nav id="navigation">
                         <ul id="responsive">
 
-                            <li><a href="{{-- route('home') --}}">{{ __('Home') }}</a>
+                            <li><a href="{{ route('home') }}">{{ __('Home') }}</a>
                                 <ul class="dropdown-nav">
                                     <li><a href="index.html">Home 1</a></li>
                                     <li><a href="index-2.html">Home 2</a></li>
@@ -54,7 +53,7 @@
                                 </ul>
                             </li>
 
-                            <li><a href="#">{{ __('Find Work') }}</a>
+                            <li><a href="#">{{ trans('Find Work') }}</a>
                                 <ul class="dropdown-nav">
                                     <li><a href="#">@lang('Browse Jobs')</a>
                                         <ul class="dropdown-nav">
@@ -139,13 +138,13 @@
                             <li>
                                 <a href="#" class="current">{{ __('Language') }}</a>
                                 <ul class="dropdown-nav">
-{{--                                    @foreach(LaravelLocalization::getSupportedLocales() as $localeCode => $properties)--}}
-{{--                                        <li>--}}
-{{--                                            <a rel="alternate" hreflang="{{ $localeCode }}" href="{{ LaravelLocalization::getLocalizedURL($localeCode, null, [], true) }}">--}}
-{{--                                                {{ $properties['native'] }}--}}
-{{--                                            </a>--}}
-{{--                                        </li>--}}
-{{--                                    @endforeach--}}
+                                    @foreach(LaravelLocalization::getSupportedLocales() as $localeCode => $properties)
+                                        <li>
+                                            <a rel="alternate" hreflang="{{ $localeCode }}" href="{{ LaravelLocalization::getLocalizedURL($localeCode, null, [], true) }}">
+                                                {{ $properties['native'] }}
+                                            </a>
+                                        </li>
+                                    @endforeach
                                 </ul>
                             </li>
 

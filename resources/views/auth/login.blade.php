@@ -49,13 +49,13 @@
                         <div class="input-with-icon-left">
                             <i class="icon-material-baseline-mail-outline"></i>
                             <input type="text" class="input-text with-border" name="email" id="email"
-                                   placeholder="Email Address" required/>
+                                   placeholder="{{__('Email Address')}}" required/>
                         </div>
 
                         <div class="input-with-icon-left">
                             <i class="icon-material-outline-lock"></i>
                             <input type="password" class="input-text with-border" name="password" id="password"
-                                   placeholder="Password" required/>
+                                   placeholder="{{__('Password')}}" required/>
                         </div>
                         @if(\Illuminate\Support\Facades\Route::has('password.request'))
                             <a href="{{route('password.request')}}" class="forgot-password">Forgot Password?</a>

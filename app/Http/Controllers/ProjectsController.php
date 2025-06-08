@@ -5,12 +5,14 @@ namespace App\Http\Controllers;
 use App\Models\Project;
 use App\Models\Proposal;
 use Illuminate\Http\Request;
+use Mcamara\LaravelLocalization\Facades\LaravelLocalization;
 
 class ProjectsController extends Controller
 {
 
     public function index()
     {
+
         $projects = Project::latest()->paginate();
 
         return view('projects.index', [

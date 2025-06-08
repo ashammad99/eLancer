@@ -45,16 +45,17 @@
 //
 
 
-//use App\Http\Controllers\HomeController;
+use App\Http\Controllers\HomeController;
 use App\Http\Controllers\MessagesController;
 use App\Http\Middleware\Authenticate;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\OTPController;
+
 //use App\Http\Controllers\MessagesController;
 //use App\Http\Controllers\PaymentsCallbackController;
 //use App\Http\Controllers\PaymentsController;
 use App\Http\Controllers\ProjectsController;
-//use Mcamara\LaravelLocalization\Facades\LaravelLocalization;
+use Mcamara\LaravelLocalization\Facades\LaravelLocalization;
 
 /*
 |--------------------------------------------------------------------------
@@ -67,13 +68,15 @@ use App\Http\Controllers\ProjectsController;
 |
 */
 
-Route::get('/', function () {
-    return view('/home');
-});
+//Route::get('/', function () {
+//    return view('/home');
+//});
 Route::group([
-//    'prefix' => LaravelLocalization::setLocale(),
+    'prefix' => LaravelLocalization::setLocale(),
+
+    'middleware' => ['localeSessionRedirect', 'localizationRedirect', 'localeViewPath']
 ], function () {
-//    Route::get('/', [HomeController::class, 'index'])->name('home');
+    Route::get('/', [HomeController::class, 'index'])->name('home');
 
     Route::get('projects/{project}', [ProjectsController::class, 'show'])
         ->name('project.show');
