@@ -1,17 +1,19 @@
 <?php
 
+
 use App\Http\Controllers\Dashboard\CategoriesController;
 //use App\Http\Controllers\Dashboard\ConfigController;
-//use App\Http\Controllers\Dashboard\RolesController;
 use Illuminate\Support\Facades\Route;
+use App\Http\Controllers\Dashboard\RolesController;
+
 
 Route::group([
     'prefix' => '/dashboard',
-    'namespace' => 'Dashboard',
+//    'namespace' => 'Dashboard',
     'middleware' => ['auth:admin,web'],
 ], function() {
-//
-//    Route::resource('roles', 'RolesController');
+
+    Route::resource('roles', RolesController::class);
 //
 //    Route::get('config', [ConfigController::class, 'index'])->name('config');
 //    Route::post('config', [ConfigController::class, 'store']);

@@ -12,6 +12,7 @@ use Illuminate\Support\Facades\Response;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Support\Facades\View;
 use Illuminate\Support\Str;
+use Illuminate\Support\Facades\Gate;
 
 class CategoriesController extends Controller
 {
@@ -22,8 +23,18 @@ class CategoriesController extends Controller
         'art_file' => 'nullable|file'
     ];
 
+    public function __construct()
+    {
+        $this->authorizeResource(Category::class);
+    }
+
+
     public function index()
     {
+//        if(! Gate::allows('categories.view')) {
+//            abort(403);
+//        }
+        $this->authorize('view-any', Category::class);
         $categories = Category::query()->leftjoin('categories as parents', 'parents.id', '=', 'categories.parent_id')
             ->select([
                 'categories.*',
@@ -41,6 +52,7 @@ class CategoriesController extends Controller
 
     public function show($id)
     {
+        $this->authorize('view', Category::class);
         $category = Category::query()->findOrFail($id);
         return View::make('categories.show')->with([
             'category' => $category,
@@ -50,6 +62,7 @@ class CategoriesController extends Controller
 
     public function create()
     {
+        $this->authorize('create', Category::class);
         $parents = Category::all();
         $category = new Category();//this object will returned to _form to stop error
         return view('categories.create', compact('parents', 'category'));
@@ -57,6 +70,7 @@ class CategoriesController extends Controller
 
     public function store(Request $request)
     {
+        $this->authorize('create', Category::class);
 
         $request->validate($this->rules());
 
@@ -93,6 +107,7 @@ class CategoriesController extends Controller
         //with Route Resource you dont need to pass id, just pass $category and the model will return the model
 //        $category = Category::query()->findOrFail($id);
         $parents = Category::all();
+        $this->authorize('update',$category);
         return view('categories.edit', compact('category', 'parents'));
     }
 
@@ -105,6 +120,7 @@ class CategoriesController extends Controller
 //        $category->slug = Str::slug($request->input('name'));
 //        $category->parent_id = $request->input('parent_id');
 //        $category->save();
+        $this->authorize('update',$category);
         $category->update($request->all());
 
         session()->flash('success', 'Category Updated');
@@ -113,6 +129,8 @@ class CategoriesController extends Controller
 
     public function destroy($id)
     {
+        $category = Category::query()->findOrFail($id);
+        $this->authorize('delete',$category);
         Category::destroy($id);
         session()->flash('success', 'Category Deleted');
         return redirect(route('categories.index'));

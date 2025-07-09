@@ -4,7 +4,7 @@
     Edit Category
 @endsection
 @section('content')
-    <form action="{{route('dashboard.categories.update',['category' =>$category->id])}}" method="post">
+    <form action="{{route('categories.update',['category' =>$category->id])}}" method="post">
         <!--input type="hidden" name="_token" value="{{ csrf_token()}}"-->
                 @csrf
         @method('put')

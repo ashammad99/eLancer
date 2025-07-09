@@ -28,5 +28,18 @@ class AuthServiceProvider extends ServiceProvider
         $this->registerPolicies();
 
         Sanctum::usePersonalAccessTokenModel(PersonalAccessToken::class);
+
+
+        Gate::before(function ($user, $ability) {
+            if ($user->id == 1) {
+                return true;
+            }
+        });
+        foreach (config('abilities') as $ability => $label) {
+            Gate::define($ability, function ($user) use ($ability) {//current user
+                return $user->hasAbility($ability);
+            });
+        }
+
     }
 }
