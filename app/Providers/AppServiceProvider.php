@@ -2,15 +2,17 @@
 
 namespace App\Providers;
 
+use App\Models\Config as ConfigModel;
 use Illuminate\Http\Resources\Json\JsonResource;
 use Illuminate\Pagination\Paginator;
 use Illuminate\Support\Facades\App;
+use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\Config;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Session;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Support\ServiceProvider;
-use Illuminate\View\View;
-
+use NumberFormatter;
 
 class AppServiceProvider extends ServiceProvider
 {
@@ -21,7 +23,15 @@ class AppServiceProvider extends ServiceProvider
      */
     public function register()
     {
-        //
+        //include __DIR__ . '/../helpers.php';
+
+        $this->app->singleton('currency', function($app) {
+            return new NumberFormatter(App::currentLocale(), NumberFormatter::CURRENCY);
+        });
+
+        // $frmt = new NumberFormatter(App::currentLocale(), NumberFormatter::CURRENCY);
+        // $this->app->instance('currency', $frmt);
+
     }
 
     /**
@@ -31,43 +41,32 @@ class AppServiceProvider extends ServiceProvider
      */
     public function boot()
     {
-        //not working here, request and session runs after provider
-//        $locale = request('lang',Session::get('lang','en'));
-//        Session::put('locale',$locale);
-//        App::setLocale($locale);
-        /*
-//         dd(config::get('app.debug'));
 
-        //all the 4 cases handles the config objects using the config object
-        //that exist in service container
-        if(config('app.env') == 'production'){
-            config([
-                'app.debug' => false,
-            ]);
-       }
-        if(config()->get('app.env') == 'production') {
-            config()->set('app.debug',false);
+        $configs = Cache::get('configs');
+        if (!$configs) {
+            $configs = ConfigModel::all();
+            Cache::put('configs', $configs);
+        }
+        foreach ($configs as $config) {
+            Config::set($config->name, $config->value);
         }
 
-        //or using Config Facade
-        if(Config::get('app.env') == 'production') {
-            Config::set('app.debug',false);
+        JsonResource::withoutWrapping();
+
+        if (App::environment('production')) {
+            Config::set('app.debug', false);
+            //Config::set('app.timezone', 'UTC');
         }
-        //or using App Facade
-        if (App::environment('local')) {
-            Config::set('app.debug',false);
-        }
-        */
-        Validator::extend('filter',function ($attribute,$value) {
-            if($value == 'god') {
+
+        Validator::extend('filter', function($attribute, $value) {
+            if ($value == 'god') {
                 return false;
             }
             return true;
-        },'Invalid Word for :attribute field');
+        }, 'Invalid word');
+
         Paginator::useBootstrap();
-
-//        Paginator::defaultView('vendor.pagination.bootstrap-4');
-
-
+        //Paginator::defaultView('vendor.pagination.tailwind');
+        //Paginator::defaultSimpleView('vendor.pagination.simple-tailwind');
     }
 }
